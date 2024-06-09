@@ -15,7 +15,7 @@ public class Bathroom extends RoomThread {
             try {
                 Thread.sleep(1000); // Черпи ресурс всяка секунда
                 if (resource.consume(consumptionRate)) {
-                    System.out.println("Bathroom consuming " + consumptionRate + " units of water.");
+                    //System.out.println("Bathroom consuming " + consumptionRate + " units of water.");
                 } else {
                     System.out.println("Bathroom could not consume resource. Not enough water.");
                 }

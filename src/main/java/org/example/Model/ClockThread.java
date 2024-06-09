@@ -14,7 +14,7 @@ public class ClockThread extends Thread {
             try {
                 Thread.sleep(1000);
                 timeInSeconds++;
-                System.out.println("Time: " + timeInSeconds + " seconds");
+                //System.out.println("Time: " + timeInSeconds + " seconds");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

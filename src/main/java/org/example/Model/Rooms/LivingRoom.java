@@ -16,7 +16,7 @@ public class LivingRoom extends RoomThread {
                 checkPaused();
                 Thread.sleep(1000); // get resource every second
                 if (resource.consume(consumptionRate)) {
-                    System.out.println("Living Room consuming " + consumptionRate + " units of electricity.");
+                    //System.out.println("Living Room consuming " + consumptionRate + " units of electricity.");
                 } else {
                     System.out.println("Living Room could not consume resource. Not enough electricity.");
                 }
