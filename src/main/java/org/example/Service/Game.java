@@ -31,8 +31,8 @@ public class Game {
 
         for (int i = 0; i < numApartments; i++) {
             apartments[i] = new Apartment(waterResource, electricityResource, consumptionRate);
-            apartments[i].getLivingRoom().setActive(false);
-            apartments[i].getBathroom().setActive(false);
+            //apartments[i].getLivingRoom().setActive(false);
+            //apartments[i].getBathroom().setActive(false);
         }
 
         initializeGUI(numApartments);
@@ -71,6 +71,7 @@ public class Game {
             startLivingRoomBtn.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     apartments[apartmentIndex].startLivingRoom();
+                    apartments[apartmentIndex].getLivingRoom().setGetsResource(true);
                     System.out.println("Started living room " + (apartmentIndex + 1));
                 }
             });
@@ -78,6 +79,7 @@ public class Game {
             stopLivingRoomBtn.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     apartments[apartmentIndex].stopLivingRoom();
+                    apartments[apartmentIndex].getLivingRoom().setGetsResource(false);
                     System.out.println("Stopped living room " + (apartmentIndex + 1));
                 }
             });
@@ -88,6 +90,7 @@ public class Game {
             startBathroomBtn.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     apartments[apartmentIndex].startBathroom();
+                    apartments[apartmentIndex].getBathroom().setGetsResource(true);
                     System.out.println("Started bath room " + (apartmentIndex + 1));
                 }
             });
@@ -95,6 +98,7 @@ public class Game {
             stopBathroomBtn.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     apartments[apartmentIndex].stopBathroom();
+                    apartments[apartmentIndex].getBathroom().setGetsResource(false);
                     System.out.println("Stopped bath room " + (apartmentIndex + 1));
                 }
             });
@@ -124,7 +128,9 @@ public class Game {
 
             decreaseHappiness();
 
-            if(0 == random.nextInt(3)) { // 1 in 5 chance
+            checkFail();
+
+            if(0 == random.nextInt(10)) { // 1 in 5 chance
                 int apartId = random.nextInt(apartments.length);
                 Apartment apartment = this.apartments[apartId]; // select random apartment
 
@@ -154,12 +160,28 @@ public class Game {
 
     public void decreaseHappiness() {
         for(Apartment apartment : apartments) {
-            if(apartment.getBathroom().getWantsResource() && (!apartment.getBathroom().getActive())) {
+            if(apartment.getBathroom().getWantsResource() && (!apartment.getBathroom().getGetsResource())) {
                 this.happiness--;
             }
-            if(apartment.getLivingRoom().getWantsResource() && (!apartment.getLivingRoom().getActive())) {
+            if(apartment.getLivingRoom().getWantsResource() && (!apartment.getLivingRoom().getGetsResource())) {
                 this.happiness--;
             }
+        }
+    }
+
+    public void checkFail() {
+        if(this.happiness < 0
+                || this.electricityResource.getAmount() < 0
+                || this.waterResource.getAmount() < 0
+                ) {
+            System.out.println("GAME OVER!");
+            System.out.println("Game statistics:");
+            System.out.printf("Electricity remaining: %d\n", this.getElectricityResource().getAmount());
+            System.out.printf("Water remaining: %d\n", this.getWaterResource().getAmount());
+            System.out.printf("Tenants happiness: %d\n", this.happiness);
+            System.out.printf("Time as manager: %d\n\n", this.getClockThread().getTimeInSeconds());
+
+            System.exit(0);
         }
     }
 

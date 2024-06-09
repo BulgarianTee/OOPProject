@@ -6,6 +6,7 @@ public abstract class RoomThread extends Thread {
     protected boolean active;
     protected boolean paused;
     protected boolean wantsResource;
+    protected boolean getsResource;
 
     public RoomThread(Resource resource, int consumptionRate) {
         this.resource = resource;
@@ -13,6 +14,7 @@ public abstract class RoomThread extends Thread {
         this.active = true;
         this.paused = false;
         this.wantsResource = false;
+        this.getsResource = false;
     }
 
     public abstract void run();
@@ -50,5 +52,21 @@ public abstract class RoomThread extends Thread {
 
     public void setActive(boolean bool) {
         this.active = bool;
+    }
+
+    public boolean getPaused() {
+        return this.paused;
+    }
+
+    public void setPaused(boolean bool) {
+        this.paused = bool;
+    }
+
+    public boolean getGetsResource() {
+        return this.getsResource;
+    }
+
+    public void setGetsResource(boolean bool) {
+        this.getsResource = bool;
     }
 }
