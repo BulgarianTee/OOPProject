@@ -59,4 +59,12 @@ public class Apartment {
         livingRoom.stopRoom();
         bathroom.stopRoom();
     }
+
+    public Bathroom getBathroom() {
+        return bathroom;
+    }
+
+    public LivingRoom getLivingRoom() {
+        return livingRoom;
+    }
 }

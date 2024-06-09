@@ -1,5 +1,7 @@
 package org.example.Service;
 
+import java.util.Random;
+
 import org.example.Model.Apartment;
 import org.example.Model.ClockThread;
 import org.example.Model.Resource;
@@ -14,7 +16,7 @@ public class Game {
     private ClockThread clockThread;
     private Resource waterResource;
     private Resource electricityResource;
-    private Resource happinessResource;
+    private int happiness;
     private Apartment[] apartments;
 
     public Game(JFrame frame, int numApartments, int initialResourceAmount, int consumptionRate) {
@@ -23,12 +25,14 @@ public class Game {
         this.frame = frame;
         this.waterResource = new Resource(initialResourceAmount);
         this.electricityResource = new Resource(initialResourceAmount);
-        this.happinessResource = new Resource(initialResourceAmount);
+        this.happiness = 100;
 
         this.apartments = new Apartment[numApartments];
 
         for (int i = 0; i < numApartments; i++) {
             apartments[i] = new Apartment(waterResource, electricityResource, consumptionRate);
+            apartments[i].getLivingRoom().setActive(false);
+            apartments[i].getBathroom().setActive(false);
         }
 
         initializeGUI(numApartments);
@@ -49,7 +53,7 @@ public class Game {
                 System.out.println("Current block statistics:");
                 System.out.printf("Electricity remaining: %d\n", game.getElectricityResource().getAmount());
                 System.out.printf("Water remaining: %d\n", game.getWaterResource().getAmount());
-                System.out.printf("Tenants happiness: %d\n", game.getHappinessResource().getAmount());
+                System.out.printf("Tenants happiness: %d\n", game.happiness);
                 System.out.printf("Time as manager: %d\n\n", game.getClockThread().getTimeInSeconds());
             }
         });
@@ -103,6 +107,60 @@ public class Game {
         frame.pack();
 
         frame.setVisible(true);
+
+        this.beginGameLoop();
+    }
+
+    public void beginGameLoop() {
+
+        Random random = new Random();
+
+        while(true) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            decreaseHappiness();
+
+            if(0 == random.nextInt(3)) { // 1 in 5 chance
+                int apartId = random.nextInt(apartments.length);
+                Apartment apartment = this.apartments[apartId]; // select random apartment
+
+                if(random.nextBoolean()) {
+                    if(apartment.getBathroom().getWantsResource()) {
+                        System.out.println("No more water for Bathroom " + (apartId+1));
+                        apartment.getBathroom().setWantsResource(false);
+                    }
+                    else {
+                        System.out.println("Water needed for Bathroom " + (apartId+1));
+                        apartment.getBathroom().setWantsResource(true);
+                    }
+                }
+                else {
+                    if(apartment.getLivingRoom().getWantsResource()) {
+                        System.out.println("No more electricity for Living room " + (apartId+1));
+                        apartment.getLivingRoom().setWantsResource(false);
+                    }
+                    else {
+                        System.out.println("Electricity needed for Living room " + (apartId+1));
+                        apartment.getLivingRoom().setWantsResource(true);
+                    }
+                }
+            }
+        }
+    }
+
+    public void decreaseHappiness() {
+        for(Apartment apartment : apartments) {
+            if(apartment.getBathroom().getWantsResource() && (!apartment.getBathroom().getActive())) {
+                this.happiness--;
+            }
+            if(apartment.getLivingRoom().getWantsResource() && (!apartment.getLivingRoom().getActive())) {
+                this.happiness--;
+            }
+        }
     }
 
     public ClockThread getClockThread() {
@@ -115,9 +173,5 @@ public class Game {
 
     public Resource getWaterResource() {
         return waterResource;
-    }
-
-    public Resource getHappinessResource() {
-        return happinessResource;
     }
 }
