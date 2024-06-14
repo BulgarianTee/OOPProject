@@ -14,7 +14,9 @@ public class Apartment {
 
     public void startLivingRoom(){
         if(!livingRoom.isAlive()){
-            livingRoom.start();
+            try {
+                livingRoom.start();
+            } catch(IllegalThreadStateException ignored) {}
         }else{
             livingRoom.resumeConsumption();
             System.out.println("Living room is already running");
@@ -23,7 +25,9 @@ public class Apartment {
     }
     public void startBathroom() {
         if(!bathroom.isAlive()){
-            bathroom.start();
+            try {
+                bathroom.start();
+            } catch(IllegalThreadStateException ignored) {}
         }else{
             bathroom.resumeConsumption();
             System.out.println("Bathroom is already running");
