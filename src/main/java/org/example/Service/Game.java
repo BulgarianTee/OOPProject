@@ -130,7 +130,7 @@ public class Game {
 
             checkFail();
 
-            if(0 == random.nextInt(5)) { // 1 in 5 chance
+            if(0 == random.nextInt(10)) { // 1 in 10 chance
                 int apartId = random.nextInt(apartments.length);
                 Apartment apartment = this.apartments[apartId]; // select random apartment
 

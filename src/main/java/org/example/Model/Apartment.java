@@ -14,9 +14,10 @@ public class Apartment {
 
     public void startLivingRoom(){
         if(!livingRoom.isAlive()){
-            try {
-                livingRoom.start();
-            } catch(IllegalThreadStateException ignored) {}
+            Resource resource = livingRoom.resource;
+            int consumption = livingRoom.consumptionRate;
+            this.livingRoom = new LivingRoom(resource, consumption);
+            livingRoom.start();
         }else{
             livingRoom.resumeConsumption();
             System.out.println("Living room is already running");
@@ -25,9 +26,10 @@ public class Apartment {
     }
     public void startBathroom() {
         if(!bathroom.isAlive()){
-            try {
-                bathroom.start();
-            } catch(IllegalThreadStateException ignored) {}
+            Resource resource = bathroom.resource;
+            int consumption = bathroom.consumptionRate;
+            this.bathroom = new Bathroom(resource, consumption);
+            bathroom.start();
         }else{
             bathroom.resumeConsumption();
             System.out.println("Bathroom is already running");
